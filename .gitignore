@@ -1,0 +1,25 @@
+# Python / local environments
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.idea/
+.vscode/
+.DS_Store
+
+# Never commit downloaded datasets, temporary sample data or model weights
+/data/raw/*
+!/data/raw/.gitkeep
+/data/sample/*
+!/data/sample/.gitkeep
+/scratch/
+*.joblib
+*.pkl
+
+# Streamlit user-specific settings
+.streamlit/secrets.toml
+
+# The four final results/p1.csv ... p4.csv ARE meant to be committed.
+# Model code and small result tables/charts are also intended to be committed.
