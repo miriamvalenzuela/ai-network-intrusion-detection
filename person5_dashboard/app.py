@@ -15,7 +15,24 @@ REQUIRED = ["row_id", "y_true", "y_pred"]
 
 st.set_page_config(page_title="Network Intrusion Model Comparison", layout="wide")
 st.title("Network Intrusion Detection - Model Comparison")
-st.write("We compare how four machine learning methods classify network-traffic records as normal (0) or suspicious (1).")
+st.markdown("""
+### Project Overview
+
+This dashboard compares four machine learning models
+trained to identify suspicious network traffic.
+
+Each model predicts whether a network record represents:
+
+- **0 - Normal Traffic**
+- **1 - Potential Attack**
+
+We compare model performance using accuracy, precision,
+recall, and F1-score to understand which methods are
+most effective at identifying potential threats.
+
+**Models:** Logistic Regression, Random Forest,
+Support Vector Machine, and Isolation Forest.
+""")
 
 mode = st.radio("Which results should I show?", ["Example data (practice)", "Actual model results"], horizontal=True)
 if mode == "Example data (practice)":
