@@ -2,7 +2,13 @@
 from pathlib import Path
 import pandas as pd
 import streamlit as st
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    confusion_matrix,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 NAMES = {
@@ -94,6 +100,51 @@ else:
     selected = st.selectbox("Select a model", [NAMES[k] for k in frames])
     chosen_number = next(k for k in frames if NAMES[k] == selected)
     st.dataframe(frames[chosen_number].head(15), use_container_width=True)
-    st.caption("The data is an offline research dataset, not live network monitoring.")
 
-# TODO for Person 5: Add a confusion matrix, explain the results, and capture a screenshot.
+    # Show how many normal and attack records were classified correctly.
+    selected_df = frames[chosen_number]
+
+    cm = confusion_matrix(
+        selected_df["y_true"],
+        selected_df["y_pred"],
+        labels=[0, 1],
+    )
+
+    matrix = pd.DataFrame(
+        cm,
+        index=["Actual Normal", "Actual Attack"],
+        columns=["Predicted Normal", "Predicted Attack"],
+    )
+
+    st.subheader("Confusion Matrix")
+    st.dataframe(matrix, use_container_width=True)
+
+    # Highlight the two important types of classification errors.
+    tn, fp, fn, tp = cm.ravel()
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric("False Alarms", int(fp))
+
+    with col2:
+        st.metric("Missed Attacks", int(fn))
+
+        st.caption("The data is an offline research dataset, not live network monitoring.")
+
+    st.subheader("Understanding the Metrics")
+
+    st.markdown("""
+    - **Accuracy:** Percentage of all predictions that were correct.
+    - **Precision:** Of the records flagged as attacks, how many
+    were actually attacks?
+    - **Recall:** Of all actual attacks, how many did the model detect?
+    - **F1-score:** A balance between precision and recall.
+
+    For intrusion detection, recall is especially important
+    because low recall means more actual attacks are missed.
+    However, precision also matters because excessive false
+    alarms can overwhelm security analysts.
+    """)
+
+    
