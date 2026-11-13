@@ -20,6 +20,7 @@ from dashboard_charts import (
     outcome_overview_html,
     score_chart_html,
 )
+from dashboard_controls import menu_select
 from dashboard_data import (
     MODEL_NAMES,
     OFFICIAL_TEST_ROWS,
@@ -71,10 +72,10 @@ def render_sidebar() -> tuple[str, bool, str]:
             key="navigation",
         )
         html('<div class="ui-sidebar-head">Data</div>')
-        source = st.selectbox(
+        source = menu_select(
             "Prediction source",
             ["Guided demo", "Team results"],
-            help="Guided demo uses synthetic predictions. Team results reads validated files from results/.",
+            help_text="Guided demo uses synthetic predictions. Team results reads validated files from results/.",
             key="prediction_source",
         )
         st.caption("Demo results are illustrative. Use Team results for your group's real evaluation.")
@@ -158,8 +159,8 @@ def render_overview(frames: dict[int, pd.DataFrame]) -> None:
     with left:
         heading("Traffic Classification", "A breakdown of the decisions made by one model.")
     with right:
-        chosen = st.selectbox(
-            "Inspect outcomes for",
+        chosen = menu_select(
+            "Inspect outcomes for:",
             options=list(frames),
             format_func=lambda number: MODEL_NAMES[number],
             key="overview_model",
@@ -170,10 +171,10 @@ def render_overview(frames: dict[int, pd.DataFrame]) -> None:
     with left:
         heading("Compare the Models", "View a score across all available algorithms.")
     with right:
-        metric = st.selectbox(
-            "Score to compare", ["Recall", "F1", "Precision", "Accuracy"],
+        metric = menu_select(
+            "Score to compare:", ["Recall", "F1", "Precision", "Accuracy"],
             key="overview_metric",
-            help="Recall: attacks detected. F1: balance of precision and recall.",
+            help_text="Recall: attacks detected. F1: balance of precision and recall.",
         )
     html(score_chart_html(table, metric))
 
@@ -187,7 +188,7 @@ def render_overview(frames: dict[int, pd.DataFrame]) -> None:
         help="Use this file for your class report or presentation.",
     )
 
-    heading("What the data tells us", "These observations apply only to the loaded test files.")
+    heading("What the Data Tells Us", "These observations apply only to the loaded test files.")
     main, aside = st.columns([1, 1], gap="medium")
     with main:
         missed = table.loc[table["Missed attacks"].idxmin()]
@@ -217,8 +218,8 @@ def render_model_details(frames: dict[int, pd.DataFrame]) -> None:
         st.info("No valid models are available yet. Choose Guided demo to explore this page.")
         return
 
-    chosen = st.selectbox(
-        "Select a model",
+    chosen = menu_select(
+        "Select a model:",
         list(frames),
         format_func=lambda number: MODEL_NAMES[number],
         key="detail_model",
@@ -255,7 +256,7 @@ def render_model_details(frames: dict[int, pd.DataFrame]) -> None:
         )
 
     heading("Inspect predictions", "Filter individual records without changing the stored model output.")
-    condition = st.selectbox(
+    condition = menu_select(
         "Filter records",
         ["All records", "Missed attacks", "False alarms", "Correct predictions"],
         key="prediction_filter",

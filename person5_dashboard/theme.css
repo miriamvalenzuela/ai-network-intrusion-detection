@@ -40,14 +40,12 @@ html, body, [data-testid="stAppViewContainer"], .stApp,
 [data-testid="stSidebar"] [data-testid="stRadio"] p { color: var(--ui-text) !important; }
 
 /* Surface-level native control coloring follows the selected dashboard mode. */
-[data-baseweb="select"] > div,
 [data-baseweb="input"] > div,
 [data-testid="stDataFrame"] {
   background: var(--ui-surface) !important;
   border-color: var(--ui-border) !important;
   color: var(--ui-text) !important;
 }
-[data-baseweb="select"] * { color: var(--ui-text) !important; }
 [data-testid="stWidgetLabel"] p, [data-testid="stCaptionContainer"] p,
 [data-testid="stMarkdownContainer"] p, [data-testid="stMarkdownContainer"] li,
 [data-testid="stMarkdownContainer"] h1, [data-testid="stMarkdownContainer"] h2,
@@ -233,13 +231,56 @@ html, body, [data-testid="stAppViewContainer"], .stApp,
 }
 @media(prefers-reduced-motion:reduce) { * {scroll-behavior:auto !important;transition:none !important;} }
 
-/* Popover menus and toggles should not inherit the opposite Streamlit theme. */
-[data-baseweb="popover"] [role="listbox"],
-[data-baseweb="popover"] [role="option"] {
+/* Menu selectors use a button trigger, not a searchable text field. */
+.ui-dropdown-label {
+  color: var(--ui-muted);
+  font-size: .78rem;
+  font-weight: 620;
+  margin: 0 0 .38rem;
+}
+[data-testid="stPopover"] button {
+  color: var(--ui-text) !important;
+  background: var(--ui-surface) !important;
+  border: 1px solid var(--ui-border) !important;
+  border-radius: 8px !important;
+  font-size: .84rem;
+  box-shadow: none !important;
+}
+[data-testid="stPopover"] button:hover {
+  border-color: var(--ui-blue) !important;
+  background: var(--ui-surface-alt) !important;
+}
+
+/* Popover content lives in a portal; style it globally for both themes. */
+[data-baseweb="popover"],
+[data-baseweb="popover"] > div,
+[data-testid="stPopoverBody"] {
   background: var(--ui-surface) !important;
   color: var(--ui-text) !important;
+  border-color: var(--ui-border) !important;
 }
-[data-baseweb="popover"] [role="option"]:hover { background: var(--ui-blue-soft) !important; }
+[data-testid="stPopoverBody"] {
+  border: 1px solid var(--ui-border) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 12px 32px var(--ui-shadow) !important;
+}
+[data-testid="stPopoverBody"] .stButton button,
+[data-baseweb="popover"] .stButton button {
+  color: var(--ui-text) !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  text-align: left !important;
+  justify-content: flex-start !important;
+  font-weight: 520 !important;
+}
+[data-testid="stPopoverBody"] .stButton button:hover,
+[data-testid="stPopoverBody"] .stButton button:focus-visible,
+[data-baseweb="popover"] .stButton button:hover,
+[data-baseweb="popover"] .stButton button:focus-visible {
+  background: var(--ui-blue-soft) !important;
+  color: var(--ui-blue-text) !important;
+}
 [data-testid="stToggle"] [role="switch"][aria-checked="true"] {
   background: var(--ui-blue) !important;
 }
