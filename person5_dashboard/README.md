@@ -61,7 +61,8 @@ row_id,y_true,y_pred
 |---|---|
 | `app.py` | Streamlit pages, navigation, widgets, orchestration. |
 | `dashboard_data.py` | Pure data validation, loading, metrics, comparisons. |
-| `dashboard_charts.py` | Pure functions returning accessible comparison, donut, matrix, and table markup. |
+| `dashboard_charts.py` | Pure functions returning accessible comparison, donut, matrix, and prediction-table markup. |
+| `dashboard_controls.py` | Consistent full-width selection popovers and their session-state callbacks. |
 | `dashboard_theme.py` | Light/dark design tokens and stylesheet loader. |
 | `theme.css` | Shared layout, component styles, responsive rules, focus states. |
 | `tests/` | Unit tests for data validation, visual component output, and theme tokens. |
@@ -100,3 +101,33 @@ Use `git push -u origin person5-dashboard` if the branch has not been published 
 - Most dynamic text is escaped before rendering. Data validation rejects incomplete test files, shuffled rows, and incompatible labels.
 - Theme preferences are session-scoped. They are not written into the repo or a browser cookie.
 - This is an academic demonstration; live traffic response, adversarial robustness, and production deployment are out of scope.
+
+
+## Dropdowns, results table, and interpretation
+
+`dashboard_controls.py` builds full-width selectors using `st.popover`
+(Streamlit **1.55+**). A native stretched popover sizes its options panel to
+at least the width of the trigger. Each option is a standard, keyboard-accessible
+button. A short click callback updates the selection and closes the popover;
+there is no searchable input or hover-only help tooltip.
+
+The individual prediction preview is a semantic, read-only HTML table generated
+by `dashboard_charts.py`. It shares the same theme variables as the other cards
+and charts, so **both its background and text change with the dashboard's
+light/dark switch**. This preview is intentionally limited to the first 20
+matching rows; the CSV export still includes *all* filtered records. Formatting
+and error highlights change only the display, not the underlying data.
+
+`dashboard_insights.py` generates performance explanations from the validated
+prediction table. It compares recall and missed attacks with false alarms and
+clearly labels fabricated demo predictions. Do not replace those calculations
+with handwritten scores.
+
+If your Python environment has an older Streamlit version, upgrade it:
+
+```powershell
+python -m pip install --upgrade "streamlit>=1.56,<2"
+```
+
+This dashboard only edits files under `person5_dashboard/`. Model outputs
+remain `results/p1.csv` through `results/p4.csv`.

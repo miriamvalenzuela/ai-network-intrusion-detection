@@ -10,7 +10,7 @@ CSS_PATH = Path(__file__).with_name("theme.css")
 
 COLORS = {
     "Light": {
-        "canvas": "#F5F6F8", "surface": "#FFFFFF", "surface_alt": "#F9FAFC",
+        "primary_on": "#FFFFFF", "canvas": "#F5F6F8", "surface": "#FFFFFF", "surface_alt": "#F9FAFC",
         "sidebar": "#FFFFFF", "text": "#202535", "muted": "#667185",
         "subtle": "#8791A1", "border": "#E4E8EE", "blue": "#455BB1",
         "blue_soft": "#EDF1FC", "blue_text": "#304792",
@@ -20,7 +20,7 @@ COLORS = {
         "note_bg": "#EFF5FB", "focus": "#405BC6", "shadow": "rgba(23, 36, 65, .025)",
     },
     "Dark": {
-        "canvas": "#131923", "surface": "#1C2532", "surface_alt": "#222D3B",
+        "primary_on": "#101827", "canvas": "#131923", "surface": "#1C2532", "surface_alt": "#222D3B",
         "sidebar": "#171F2A", "text": "#EFF3FA", "muted": "#B1BCCD",
         "subtle": "#9CAAC0", "border": "#354253", "blue": "#90A9FF",
         "blue_soft": "#2B3750", "blue_text": "#C1D0FF",

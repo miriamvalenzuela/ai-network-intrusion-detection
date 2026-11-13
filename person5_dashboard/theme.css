@@ -40,8 +40,7 @@ html, body, [data-testid="stAppViewContainer"], .stApp,
 [data-testid="stSidebar"] [data-testid="stRadio"] p { color: var(--ui-text) !important; }
 
 /* Surface-level native control coloring follows the selected dashboard mode. */
-[data-baseweb="input"] > div,
-[data-testid="stDataFrame"] {
+[data-baseweb="input"] > div {
   background: var(--ui-surface) !important;
   border-color: var(--ui-border) !important;
   color: var(--ui-text) !important;
@@ -152,27 +151,6 @@ html, body, [data-testid="stAppViewContainer"], .stApp,
 .ui-bar-value {text-align:right; font-size:.82rem; font-weight:720; color:var(--ui-text);
   font-variant-numeric:tabular-nums;}
 
-.ui-table-overflow {overflow-x:auto; border:1px solid var(--ui-border); border-radius:9px; background:var(--ui-surface);}
-.ui-data-table {width:100%; border-collapse:collapse; min-width:750px; font-size:.82rem;
-  font-variant-numeric:tabular-nums; color:var(--ui-text);}
-.ui-data-table th, .ui-data-table td {padding:.92rem .96rem; text-align:right; border-bottom:1px solid var(--ui-border);}
-.ui-data-table th:first-child, .ui-data-table td:first-child {text-align:left;}
-.ui-data-table thead th {background:var(--ui-surface-alt);color:var(--ui-muted);font-size:.74rem;font-weight:650;}
-.ui-data-table tbody th {font-weight:670;}
-.ui-data-table tbody tr:last-child th,.ui-data-table tbody tr:last-child td {border-bottom:0;}
-.ui-data-table tbody tr:hover {background:var(--ui-surface-alt);}
-.ui-callout {background:var(--ui-surface); border:1px solid var(--ui-border); border-radius:10px;
-  padding:1.15rem 1.35rem; height:100%;}
-.ui-callout h3 {color:var(--ui-text);font-size:.98rem;font-weight:700;margin:0 0 .75rem;}
-.ui-insight {border-top:1px solid var(--ui-border);padding:.75rem 0;}
-.ui-insight:first-of-type {border-top:0;}
-.ui-insight span {display:block;font-size:.76rem;color:var(--ui-muted);margin-bottom:.25rem;}
-.ui-insight strong {font-size:.89rem;color:var(--ui-text);font-weight:650;line-height:1.45;}
-.ui-insight p {font-size:.76rem;color:var(--ui-muted);margin:.3rem 0 0;line-height:1.5;}
-.ui-info-card {background:var(--ui-surface);border:1px solid var(--ui-border);border-radius:9px;padding:1.25rem 1.35rem;}
-.ui-info-card h3 {font-size:.98rem;font-weight:700;color:var(--ui-text);margin:0 0 .5rem;}
-.ui-info-card p {font-size:.84rem;color:var(--ui-muted);line-height:1.6;margin:.25rem 0;}
-.ui-info-card strong {color:var(--ui-text);}
 .ui-detail-stats {display:grid;grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem;}
 .ui-detail-item {border-bottom:1px solid var(--ui-border);padding:.4rem 0 1rem;}
 .ui-detail-item strong {display:block;font-weight:550;font-size:1.7rem;color:var(--ui-text);font-variant-numeric:tabular-nums;}
@@ -231,7 +209,8 @@ html, body, [data-testid="stAppViewContainer"], .stApp,
 }
 @media(prefers-reduced-motion:reduce) { * {scroll-behavior:auto !important;transition:none !important;} }
 
-/* Menu selectors use a button trigger, not a searchable text field. */
+/* A stretched popover uses the trigger's width as its minimum panel width.
+   Unlike searchable selectboxes, each option is a regular button. */
 .ui-dropdown-label {
   color: var(--ui-muted);
   font-size: .78rem;
@@ -239,50 +218,172 @@ html, body, [data-testid="stAppViewContainer"], .stApp,
   margin: 0 0 .38rem;
 }
 [data-testid="stPopover"] button {
-  color: var(--ui-text) !important;
   background: var(--ui-surface) !important;
+  color: var(--ui-text) !important;
   border: 1px solid var(--ui-border) !important;
   border-radius: 8px !important;
   font-size: .84rem;
   box-shadow: none !important;
 }
-[data-testid="stPopover"] button:hover {
+[data-testid="stPopover"] button:hover,
+[data-testid="stPopover"] button:focus-visible {
   border-color: var(--ui-blue) !important;
-  background: var(--ui-surface-alt) !important;
 }
-
-/* Popover content lives in a portal; style it globally for both themes. */
-[data-baseweb="popover"],
-[data-baseweb="popover"] > div,
-[data-testid="stPopoverBody"] {
+/* Streamlit positions popover content in a portal outside the trigger. */
+[data-testid="stPopoverBody"],
+[data-baseweb="popover"] [data-testid="stPopoverBody"] {
   background: var(--ui-surface) !important;
   color: var(--ui-text) !important;
-  border-color: var(--ui-border) !important;
-}
-[data-testid="stPopoverBody"] {
   border: 1px solid var(--ui-border) !important;
-  border-radius: 10px !important;
-  box-shadow: 0 12px 32px var(--ui-shadow) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 12px 26px var(--ui-shadow) !important;
 }
-[data-testid="stPopoverBody"] .stButton button,
-[data-baseweb="popover"] .stButton button {
-  color: var(--ui-text) !important;
-  background: transparent !important;
+[data-testid="stPopoverBody"] [data-testid="stButton"] button {
+  display: flex;
+  justify-content: flex-start !important;
+  text-align: left;
+  min-height: 2.4rem;
   border: 0 !important;
   border-radius: 6px !important;
-  text-align: left !important;
-  justify-content: flex-start !important;
-  font-weight: 520 !important;
+  color: var(--ui-text) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-weight: 520;
 }
-[data-testid="stPopoverBody"] .stButton button:hover,
-[data-testid="stPopoverBody"] .stButton button:focus-visible,
-[data-baseweb="popover"] .stButton button:hover,
-[data-baseweb="popover"] .stButton button:focus-visible {
+[data-testid="stPopoverBody"] [data-testid="stButton"] button[kind="primary"] {
+  color: var(--ui-blue-text) !important;
+  background: var(--ui-blue-soft) !important;
+  font-weight: 680;
+}
+[data-testid="stPopoverBody"] [data-testid="stButton"] button:hover {
   background: var(--ui-blue-soft) !important;
   color: var(--ui-blue-text) !important;
 }
 [data-testid="stToggle"] [role="switch"][aria-checked="true"] {
   background: var(--ui-blue) !important;
+}
+
+/* The comparison is a single light table, not a hard-edged cell grid. */
+.ui-table-overflow {
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  overflow-x: auto;
+  background: var(--ui-surface);
+  box-shadow: 0 2px 8px var(--ui-shadow);
+}
+.ui-table-overflow table.ui-data-table {
+  width: 100%;
+  min-width: 750px;
+  font-size: .82rem;
+  font-variant-numeric: tabular-nums;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  border: 0 !important;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+}
+.ui-table-overflow table.ui-data-table th,
+.ui-table-overflow table.ui-data-table td {
+  border: 0 !important;
+  border-bottom: 1px solid var(--ui-border) !important;
+  box-shadow: none !important;
+  padding: 1rem .9rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ui-table-overflow table.ui-data-table thead th {
+  font-size: .73rem;
+  font-weight: 670;
+  color: var(--ui-muted);
+  background: var(--ui-surface-alt);
+}
+.ui-table-overflow table.ui-data-table tbody th {
+  font-weight: 620;
+}
+.ui-table-overflow table.ui-data-table tbody tr:hover {
+  background: var(--ui-surface-alt);
+}
+.ui-table-overflow table.ui-data-table tbody tr:last-child th,
+.ui-table-overflow table.ui-data-table tbody tr:last-child td {
+  border-bottom: 0 !important;
+}
+.ui-strong-score {font-weight: 740; color: var(--ui-text);}
+.ui-top-label {
+  display: inline-block; margin-left: .56rem; padding: .17rem .4rem;
+  border-radius: 5px; background: var(--ui-blue-soft);
+  color: var(--ui-blue-text); font-size: .65rem;
+  font-weight: 700; vertical-align: baseline;
+}
+/* Export action sits outside the table, with breathing room and theme contrast. */
+.st-key-comparison_csv_export { margin-top: 1.1rem; margin-bottom: .35rem; }
+.st-key-comparison_csv_export button {
+  background: var(--ui-blue) !important;
+  border: 1px solid var(--ui-blue) !important;
+  color: var(--ui-primary-on) !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  padding: .57rem 1rem !important;
+  box-shadow: 0 2px 7px var(--ui-shadow) !important;
+}
+.st-key-comparison_csv_export button p,
+.st-key-comparison_csv_export button svg {
+  color: var(--ui-primary-on) !important;
+  fill: currentColor;
+}
+.st-key-comparison_csv_export button:hover {
+  filter: brightness(.92);
+  border-color: var(--ui-blue) !important;
+}
+.st-key-comparison_csv_export button:focus-visible {
+  outline: 3px solid var(--ui-focus) !important;
+  outline-offset: 3px;
+}
+
+/* Insight cards: interpretation is written in sentences, not just rankings. */
+.ui-insight-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 1rem;
+  margin: .25rem 0 1rem;
+}
+.ui-insight-panel {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  padding: 1.3rem 1.45rem;
+  min-width: 0;
+  box-shadow: 0 2px 8px var(--ui-shadow);
+}
+.ui-insight-heading { padding-bottom: .85rem; }
+.ui-insight-heading h3 {
+  font-size: 1.03rem; font-weight: 720;
+  letter-spacing: -.02em; margin: 0 0 .26rem;
+  color: var(--ui-text);
+}
+.ui-insight-heading p {font-size: .8rem; color: var(--ui-muted); margin: 0; line-height: 1.5;}
+.ui-finding { padding: 1rem 0; border-top: 1px solid var(--ui-border); }
+.ui-finding-label {
+  font-size: .74rem; font-weight: 680;
+  color: var(--ui-blue-text); margin-bottom: .32rem;
+}
+.ui-finding strong {
+  display: block; color: var(--ui-text); font-size: .98rem;
+  font-weight: 690; line-height: 1.45;
+}
+.ui-finding p,
+.ui-context-stat p,
+.ui-context-block p {
+  color: var(--ui-muted); margin: .42rem 0 0;
+  font-size: .81rem; line-height: 1.65;
+}
+.ui-context-stat {border-top: 1px solid var(--ui-border); padding: 1rem 0 1.08rem;}
+.ui-context-stat strong {display: block; font-size: 1.6rem; font-weight: 600; color: var(--ui-text); letter-spacing:-.03em;}
+.ui-context-stat span {display: block; font-size: .78rem; color: var(--ui-muted); margin-top: .2rem;}
+.ui-context-block {border-top: 1px solid var(--ui-border); padding: .95rem 0;}
+.ui-context-block strong {font-size: .87rem; font-weight: 690; color: var(--ui-text);}
+@media (max-width: 900px) {
+  .ui-insight-grid {grid-template-columns: 1fr;}
+  .ui-insight-panel {padding: 1.15rem;}
 }
 
 /* On narrower laptop windows, stack the outcome summary and the donut. */
@@ -292,3 +393,24 @@ html, body, [data-testid="stAppViewContainer"], .stApp,
   .ui-outcome-right {padding:.1rem 0;}
   .ui-table-overflow,.ui-panel {min-width:0;max-width:100%;}
 }
+
+/* Unlike a canvas-based dataframe, this preview follows the chosen theme. */
+.ui-table-overflow table.ui-prediction-table {
+  min-width: 500px;
+  background: var(--ui-surface) !important;
+  color: var(--ui-text) !important;
+}
+.ui-prediction-table tbody tr.ui-prediction-error {
+  background-color: var(--ui-bad-bg);
+}
+.ui-prediction-table tbody tr.ui-prediction-error:hover {
+  background-color: var(--ui-bad-bg);
+}
+.ui-prediction-table tbody th:first-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-muted);
+}
+.ui-prediction-table td:last-child { font-weight: 650; }
+.ui-prediction-table td:nth-child(2),
+.ui-prediction-table td:nth-child(3) { text-align: center; }

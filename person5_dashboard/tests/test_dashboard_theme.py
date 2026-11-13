@@ -48,3 +48,18 @@ class PresentationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ComponentThemeTests(unittest.TestCase):
+    def test_prediction_table_uses_theme_tokens_not_fixed_dark_background(self):
+        for mode in ("Light", "Dark"):
+            css = build_theme_css(mode)
+            self.assertIn("table.ui-prediction-table", css)
+            self.assertIn("background: var(--ui-surface)", css)
+            self.assertIn("color: var(--ui-text)", css)
+
+    def test_popover_uses_theme_background(self):
+        for mode in ("Light", "Dark"):
+            css = build_theme_css(mode)
+            self.assertIn('[data-testid="stPopoverBody"]', css)
+            self.assertIn("background: var(--ui-surface)", css)

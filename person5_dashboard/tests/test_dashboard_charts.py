@@ -48,3 +48,38 @@ class ChartTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PredictionPreviewTests(unittest.TestCase):
+    def setUp(self):
+        self.data = pd.DataFrame([
+            {"row_id": 0, "Actual": "Normal", "Predicted": "Normal", "Outcome": "Correct"},
+            {"row_id": 1, "Actual": "Attack", "Predicted": "Normal", "Outcome": "Missed attack"},
+        ])
+
+    def test_prediction_preview_uses_semantic_themable_table(self):
+        from person5_dashboard.dashboard_charts import prediction_table_html
+        markup = prediction_table_html(self.data)
+        self.assertIn('ui-prediction-table', markup)
+        self.assertIn('<th scope="col">Actual</th>', markup)
+        self.assertIn('<th scope="row">1</th>', markup)
+        self.assertIn('ui-prediction-error', markup)
+        self.assertIn('Missed attack', markup)
+
+    def test_prediction_preview_escapes_untrusted_text(self):
+        from person5_dashboard.dashboard_charts import prediction_table_html
+        data = self.data.copy()
+        data.loc[0, "Outcome"] = '<script>alert("oops")</script>'
+        markup = prediction_table_html(data)
+        self.assertNotIn('<script>', markup)
+        self.assertIn('&lt;script&gt;', markup)
+
+    def test_empty_preview_has_no_empty_table(self):
+        from person5_dashboard.dashboard_charts import prediction_table_html
+        markup = prediction_table_html(self.data.iloc[0:0])
+        self.assertIn("No predictions match", markup)
+
+    def test_missing_column_rejected(self):
+        from person5_dashboard.dashboard_charts import prediction_table_html
+        with self.assertRaises(ValueError):
+            prediction_table_html(self.data.drop(columns=["Outcome"]))

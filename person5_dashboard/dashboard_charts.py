@@ -154,19 +154,67 @@ def matrix_chart_html(stats: Mapping) -> str:
 
 
 def comparison_table_html(table: pd.DataFrame) -> str:
-    """A compact accessible table with exact scores and error counts."""
+    """Build a clean semantic table with no decorative cell grid lines."""
     columns = ("Model", "Accuracy", "Precision", "Recall", "F1", "False alarms", "Missed attacks")
     headings = "".join(
-        f'<th scope="col">{escape("F1-score" if col == "F1" else col)}</th>' for col in columns
+        f'<th scope="col">{escape("F1-score" if col == "F1" else col)}</th>'
+        for col in columns
     )
     rows = []
+    leading_f1 = table["F1"].max() if not table.empty else None
     for _, record in table.iterrows():
-        cells = [f'<th scope="row">{escape(str(record["Model"]))}</th>']
-        cells.extend(f'<td>{float(record[column]):.1%}</td>' for column in ("Accuracy", "Precision", "Recall", "F1"))
-        cells.extend(f'<td>{int(record[column]):,}</td>' for column in ("False alarms", "Missed attacks"))
+        model = escape(str(record["Model"]))
+        is_top = float(record["F1"]) == leading_f1
+        label = '<span class="ui-top-label">Top F1</span>' if is_top else ''
+        cells = [f'<th scope="row"><span class="ui-model-name">{model}</span>{label}</th>']
+        for column in ("Accuracy", "Precision", "Recall", "F1"):
+            emphasis = ' class="ui-strong-score"' if column == "F1" else ''
+            cells.append(f'<td{emphasis}>{float(record[column]):.1%}</td>')
+        cells.extend(
+            f'<td>{int(record[column]):,}</td>'
+            for column in ("False alarms", "Missed attacks")
+        )
         rows.append('<tr>' + "".join(cells) + '</tr>')
     return (
-        '<div class="ui-table-overflow" role="region" aria-label="Model comparison table" tabindex="0">'
+        '<div class="ui-table-overflow" role="region" '
+        'aria-label="Model comparison table" tabindex="0">'
         '<table class="ui-data-table"><thead><tr>' + headings + '</tr></thead><tbody>'
+        + "".join(rows) + '</tbody></table></div>'
+    )
+
+
+def prediction_table_html(records: pd.DataFrame) -> str:
+    """Render a small prediction preview with the application's theme tokens.
+
+    Streamlit's native dataframe grid has an independent canvas theme, so a
+    semantic HTML table gives the 20-row preview consistent light/dark colors.
+    Data values are escaped before being inserted into markup.
+    """
+    columns = ("row_id", "Actual", "Predicted", "Outcome")
+    if any(column not in records.columns for column in columns):
+        raise ValueError("Prediction preview is missing required columns")
+
+    headings = "".join(f'<th scope="col">{escape(name)}</th>' for name in columns)
+    rows = []
+    for row_id, actual, predicted, outcome in records.loc[:, columns].itertuples(index=False, name=None):
+        status = ("ui-prediction-error" if outcome in ("Missed attack", "False alarm")
+                  else "")
+        rows.append(
+            f'<tr class="{status}">'
+            f'<th scope="row">{escape(str(row_id))}</th>'
+            f'<td>{escape(str(actual))}</td>'
+            f'<td>{escape(str(predicted))}</td>'
+            f'<td>{escape(str(outcome))}</td>'
+            '</tr>'
+        )
+
+    if not rows:
+        return '<p class="ui-muted">No predictions match this filter.</p>'
+
+    return (
+        '<div class="ui-table-overflow" role="region" '
+        'aria-label="Prediction records" tabindex="0">'
+        '<table class="ui-data-table ui-prediction-table">'
+        '<thead><tr>' + headings + '</tr></thead><tbody>'
         + "".join(rows) + '</tbody></table></div>'
     )

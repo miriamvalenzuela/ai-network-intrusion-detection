@@ -18,9 +18,11 @@ from dashboard_charts import (
     kpi_grid_html,
     matrix_chart_html,
     outcome_overview_html,
+    prediction_table_html,
     score_chart_html,
 )
 from dashboard_controls import menu_select
+from dashboard_insights import insights_html
 from dashboard_data import (
     MODEL_NAMES,
     OFFICIAL_TEST_ROWS,
@@ -75,7 +77,6 @@ def render_sidebar() -> tuple[str, bool, str]:
         source = menu_select(
             "Prediction source",
             ["Guided demo", "Team results"],
-            help_text="Guided demo uses synthetic predictions. Team results reads validated files from results/.",
             key="prediction_source",
         )
         st.caption("Demo results are illustrative. Use Team results for your group's real evaluation.")
@@ -136,7 +137,7 @@ def render_availability(report, real_mode: bool) -> None:
         st.info(f"Awaiting {len(report.missing)} model(s): {', '.join(report.missing)}. Available files can still be reviewed.")
 
 
-def render_overview(frames: dict[int, pd.DataFrame]) -> None:
+def render_overview(frames: dict[int, pd.DataFrame], *, real_mode: bool) -> None:
     if not frames:
         st.info("No valid prediction files are available. Select Guided demo or add the team's CSV files in results/.")
         return
@@ -145,7 +146,7 @@ def render_overview(frames: dict[int, pd.DataFrame]) -> None:
     best_f1 = table.loc[table["F1"].idxmax()]
     best_recall = table.loc[table["Recall"].idxmax()]
 
-    heading("At a Glance", "A consistent view of model quality across the same labeled test records.")
+    heading("At a glance", "A consistent view of model quality across the same labeled test records.")
     html(kpi_grid_html([
         ("Models available", f"{len(frames)} / 4", "Validated prediction files"),
         ("Records per model", f"{len(next(iter(frames.values()))):,}", "Aligned test records"),
@@ -157,10 +158,10 @@ def render_overview(frames: dict[int, pd.DataFrame]) -> None:
     # across models, since that would count the same test records repeatedly.
     left, right = st.columns([3, 1.3], vertical_alignment="bottom")
     with left:
-        heading("Traffic Classification", "A breakdown of the decisions made by one model.")
+        heading("Traffic classification", "A breakdown of the decisions made by one model.")
     with right:
         chosen = menu_select(
-            "Inspect outcomes for:",
+            "Inspect outcomes for",
             options=list(frames),
             format_func=lambda number: MODEL_NAMES[number],
             key="overview_model",
@@ -169,48 +170,27 @@ def render_overview(frames: dict[int, pd.DataFrame]) -> None:
 
     left, right = st.columns([3, 1.3], vertical_alignment="bottom")
     with left:
-        heading("Compare the Models", "View a score across all available algorithms.")
+        heading("Compare the models", "View a score across all available algorithms.")
     with right:
         metric = menu_select(
-            "Score to compare:", ["Recall", "F1", "Precision", "Accuracy"],
+            "Score to compare", ["Recall", "F1", "Precision", "Accuracy"],
             key="overview_metric",
-            help_text="Recall: attacks detected. F1: balance of precision and recall.",
         )
     html(score_chart_html(table, metric))
 
-    heading("Complete Results", "Exact model scores and classification errors.")
+    heading("Complete results", "Exact model scores and classification errors.")
     html(comparison_table_html(table))
     st.download_button(
-        "Download Comparison CSV",
+        "Download comparison CSV",
         data=table.drop(columns=["Model number"]).to_csv(index=False).encode("utf-8"),
         file_name="model_comparison.csv",
         mime="text/csv",
-        help="Use this file for your class report or presentation.",
+        key="comparison_csv_export",
+        type="primary",
     )
 
-    heading("What the Data Tells Us", "These observations apply only to the loaded test files.")
-    main, aside = st.columns([1, 1], gap="medium")
-    with main:
-        missed = table.loc[table["Missed attacks"].idxmin()]
-        html(
-            '<div class="ui-callout"><h3>Key findings</h3>'
-            '<div class="ui-insight"><span>Best balanced performance</span>'
-            f'<strong>{escape(str(best_f1["Model"]))} · {best_f1["F1"]:.1%} F1</strong></div>'
-            '<div class="ui-insight"><span>Highest attack detection rate</span>'
-            f'<strong>{escape(str(best_recall["Model"]))} · {best_recall["Recall"]:.1%} recall</strong></div>'
-            '<div class="ui-insight"><span>Fewest missed attacks</span>'
-            f'<strong>{escape(str(missed["Model"]))} · {int(missed["Missed attacks"]):,} missed</strong></div>'
-            '</div>'
-        )
-    with aside:
-        html(
-            '<div class="ui-info-card"><h3>How to read the comparison</h3>'
-            '<p><strong>Recall</strong> is especially relevant here because missed attacks '
-            'may go undetected.</p><p><strong>Precision</strong> shows how often attack alerts '
-            'are correct. Low precision produces more false alarms.</p>'
-            '<p><strong>F1-score</strong> balances those concerns. A better test score '
-            'does not guarantee performance on live networks.</p></div>'
-        )
+    heading("What the data tells us", "Analysis based on the available test results, not assumed outcomes.")
+    html(insights_html(table, demo=not real_mode))
 
 
 def render_model_details(frames: dict[int, pd.DataFrame]) -> None:
@@ -219,7 +199,7 @@ def render_model_details(frames: dict[int, pd.DataFrame]) -> None:
         return
 
     chosen = menu_select(
-        "Select a model:",
+        "Select a model",
         list(frames),
         format_func=lambda number: MODEL_NAMES[number],
         key="detail_model",
@@ -277,8 +257,8 @@ def render_model_details(frames: dict[int, pd.DataFrame]) -> None:
         rows = rows.loc[~(missed_mask | alarms_mask)]
 
     display_columns = ["row_id", "Actual", "Predicted", "Outcome"]
-    st.caption(f"Showing 20 of {len(rows):,} matching rows; original row IDs are preserved.")
-    st.dataframe(rows[display_columns].head(20), use_container_width=True, hide_index=True)
+    st.caption(f"Showing {min(20, len(rows)):,} of {len(rows):,} matching rows; original row IDs are preserved.")
+    html(prediction_table_html(rows[display_columns].head(20)))
     st.download_button(
         "Export filtered records",
         rows[display_columns].to_csv(index=False).encode("utf-8"),
@@ -364,7 +344,7 @@ def main() -> None:
     render_availability(report, real_mode)
 
     if page == "Overview":
-        render_overview(report.frames)
+        render_overview(report.frames, real_mode=real_mode)
     elif page == "Model details":
         render_model_details(report.frames)
     else:
