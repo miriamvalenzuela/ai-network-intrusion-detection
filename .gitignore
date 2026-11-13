@@ -6,7 +6,6 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .idea/
-.vscode/
 .DS_Store
 
 # Never commit downloaded datasets, temporary sample data or model weights
@@ -23,3 +22,5 @@ __pycache__/
 
 # The four final results/p1.csv ... p4.csv ARE meant to be committed.
 # Model code and small result tables/charts are also intended to be committed.
+config.bat
+node_modules
