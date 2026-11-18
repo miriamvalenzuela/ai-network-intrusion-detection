@@ -101,8 +101,6 @@ REPO/
 `-- scratch/                  <- ignored sample runs
 ```
 
-Your repo's existing `Network_Intrusion_Project_3_Week_Async_Plan.pdf` and `.md` can stay in the top level. This kit does not replace them.
-
 ## How predictions connect everyone
 
 Every model writes exactly three columns, in the ORIGINAL test-row order:
