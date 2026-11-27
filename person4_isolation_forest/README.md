@@ -19,7 +19,7 @@ The model trains only on rows with `label=0` from the training CSV. It ignores a
 
 ## Week 1 - Get set up
 
-- [ ] Run the synthetic sample once.
+- [X] Run the synthetic sample once.
 - [ ] Find `X_normal = X_train.loc[y_train == 0]` in `train.py`.
 - [ ] Confirm the official dataset is downloaded and run with real data.
 
