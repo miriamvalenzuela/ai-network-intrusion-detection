@@ -33,24 +33,21 @@ contamination = 0.02
   "precision": 0.8816,
   "recall": 0.0926,
   "f1": 0.1677,
-  "training_data": "UNSW_NB15",
-  "test_rows": 82332
+  "training_data": "UNSW_NB15"
 
 contamination = 0.01
   "accuracy": 0.4588,
   "precision": 0.7939,
   "recall": 0.0229,
   "f1": 0.0446,
-  "training_data": "UNSW_NB15",
-  "test_rows": 8233
+  "training_data": "UNSW_NB15"
 
 contamination = 0.05 
   "accuracy": 0.5592,
   "precision": 0.8468,
   "recall": 0.2435,
   "f1": 0.3783,
-  "training_data": "UNSW_NB15",
-  "test_rows": 82332
+  "training_data": "UNSW_NB15"
 
 
 When 'contamination' was set to 0.01, it detected fewer attacks, with all of the evaluation metrics (accruacy, precision, recall, f1) lower than when 'contamination' was set to 0.02. 
@@ -74,9 +71,59 @@ Anomalies might incldue normal activity and miss some attacks due to false posit
 
 ## Your notes
 
-Normal training rows used: TODO
+Normal training rows used: 30,0000
 
-Accuracy: TODO | Precision: TODO | Recall: TODO | F1: TODO
+contamination = 0.02
+  "accuracy": 0.4936,
+  "precision": 0.8816,
+  "recall": 0.0926,
+  "f1": 0.1677,
+  "training_data": "UNSW_NB15",
+
+
+Normal training rows used: 30,0000
+
+contamination = 0.01
+  "accuracy": 0.4588,
+  "precision": 0.7939,
+  "recall": 0.0229,
+  "f1": 0.0446,
+  "training_data": "UNSW_NB15",
+  
+
+Normal training rows used: 30,0000
+
+contamination = 0.05 
+  "accuracy": 0.5592,
+  "precision": 0.8468,
+  "recall": 0.2435,
+  "f1": 0.3783,
+  "training_data": "UNSW_NB15",
+
+
+
+Normal training rows used: 50,000
+
+contamination = 0.02
+  "accuracy": 0.4935,
+  "precision": 0.8841,
+  "recall": 0.0922,
+  "f1": 0.167,
+  "training_data": "UNSW_NB15"
+
+contamination = 0.01
+  "accuracy": 0.4516,
+  "precision": 0.6504,
+  "recall": 0.0085,
+  "f1": 0.0169,
+  "training_data": "UNSW_NB15"
+
+contamnication = 0.05
+  "accuracy": 0.5623,
+  "precision": 0.8481,
+  "recall": 0.2498,
+  "f1": 0.386,
+  "training_data": "UNSW_NB15"
 
 What I learned: TODO
 
