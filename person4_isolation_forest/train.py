@@ -4,6 +4,7 @@ import sys
 import argparse
 from sklearn.ensemble import IsolationForest
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
