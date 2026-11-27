@@ -37,7 +37,7 @@ def main():
     predictions = (raw_predictions == -1).astype(int)
     save_results(y_test, predictions, args.data_dir, 4, "person4_isolation_forest")
     # TODO: Discuss why anomalies do not always match labeled attacks.
-        #See README for explanation.
+        #Explanations in README.
 
 if __name__ == "__main__":
     main() 
