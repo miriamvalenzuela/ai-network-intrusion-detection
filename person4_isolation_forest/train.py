@@ -4,6 +4,7 @@ import sys
 import argparse
 from sklearn.ensemble import IsolationForest
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -36,7 +37,7 @@ def main():
     predictions = (raw_predictions == -1).astype(int)
     save_results(y_test, predictions, args.data_dir, 4, "person4_isolation_forest")
     # TODO: Discuss why anomalies do not always match labeled attacks.
-
+        #Explanations in README.
 
 if __name__ == "__main__":
-    main()
+    main() 
