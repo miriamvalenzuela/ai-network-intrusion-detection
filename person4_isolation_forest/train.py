@@ -37,12 +37,6 @@ def main():
     predictions = (raw_predictions == -1).astype(int)
     save_results(y_test, predictions, args.data_dir, 4, "person4_isolation_forest")
     # TODO: Discuss why anomalies do not always match labeled attacks.
-
-    #need to evaluate predictions first so that anomalies can be detected
-    #the anomalies will then be compared with the labeled attacks
-
-    #get accuracy of correct predictions
-    accuracy = accuracy_score(y_test, predictions)
     
 
 if __name__ == "__main__":

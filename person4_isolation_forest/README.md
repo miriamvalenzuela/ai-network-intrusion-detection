@@ -44,6 +44,15 @@ contamination = 0.01
   "training_data": "UNSW_NB15",
   "test_rows": 8233
 
+contamination = 0.05 
+  "accuracy": 0.5592,
+  "precision": 0.8468,
+  "recall": 0.2435,
+  "f1": 0.3783,
+  "training_data": "UNSW_NB15",
+  "test_rows": 82332
+
+
 When 'contamination' was set to 0.01, it detected fewer attacks, with all of the evaluation metrics (accruacy, precision, recall, f1) lower than when 'contamination' was set to 0.02. 
 
 - [X] Explain in simple terms why anomalies might include normal activity and miss some attacks.
@@ -52,7 +61,14 @@ Anomalies might incldue normal activity and miss some attacks due to false posit
 
 ## Week 3 - Explain and submit
 
-- [ ] Record accuracy, precision, recall, F1 and the normal training-row count.
+- [X] Record accuracy, precision, recall, F1 and the normal training-row count.
+
+    Normal training-row countL 30,000
+    Accuracy: 0.4936
+    Precision: 0.8816
+    Recall: 0.0926
+    F1: 0.1677
+
 - [ ] Write 3-5 sentences about how your unsupervised approach compares to classification.
 - [ ] Commit your files and `results/p4.csv`.
 
