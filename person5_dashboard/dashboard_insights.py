@@ -89,12 +89,12 @@ def insights_html(table: pd.DataFrame, *, demo: bool) -> str:
     return (
         '<div class="ui-insight-grid">'
         '<section class="ui-insight-panel" aria-label="Evidence from current model results">'
-        '<div class="ui-insight-heading"><h3>Performance highlights</h3>'
+        '<div class="ui-insight-heading"><h3>Performance Highlights:</h3>'
         '<p>Rankings and error counts calculated from the current CSV files.</p></div>'
         + ''.join(primary)
         + '</section>'
         '<section class="ui-insight-panel" aria-label="Interpretation and limitations">'
-        '<div class="ui-insight-heading"><h3>What to consider</h3>'
+        '<div class="ui-insight-heading"><h3>What to Consider:</h3>'
         '<p>Putting these scores into context.</p></div>'
         '<div class="ui-context-stat">'
         f'<strong>{attacks:,} of {total:,}</strong>'

@@ -69,7 +69,7 @@ def render_sidebar() -> tuple[str, bool, str]:
         html('<div class="ui-sidebar-head">Workspace</div>')
         page = st.radio(
             "Navigate",
-            ["Overview", "Model details", "How it works"],
+            ["Overview", "Model Details", "How it works"],
             label_visibility="collapsed",
             key="navigation",
         )
@@ -146,7 +146,7 @@ def render_overview(frames: dict[int, pd.DataFrame], *, real_mode: bool) -> None
     best_f1 = table.loc[table["F1"].idxmax()]
     best_recall = table.loc[table["Recall"].idxmax()]
 
-    heading("At a glance", "A consistent view of model quality across the same labeled test records.")
+    heading("At a Glance", "A consistent view of model quality across the same labeled test records.")
     html(kpi_grid_html([
         ("Models available", f"{len(frames)} / 4", "Validated prediction files"),
         ("Records per model", f"{len(next(iter(frames.values()))):,}", "Aligned test records"),
@@ -158,7 +158,7 @@ def render_overview(frames: dict[int, pd.DataFrame], *, real_mode: bool) -> None
     # across models, since that would count the same test records repeatedly.
     left, right = st.columns([3, 1.3], vertical_alignment="bottom")
     with left:
-        heading("Traffic classification", "A breakdown of the decisions made by one model.")
+        heading("Traffic Classification", "A breakdown of the decisions made by one model.")
     with right:
         chosen = menu_select(
             "Inspect outcomes for",
@@ -170,7 +170,7 @@ def render_overview(frames: dict[int, pd.DataFrame], *, real_mode: bool) -> None
 
     left, right = st.columns([3, 1.3], vertical_alignment="bottom")
     with left:
-        heading("Compare the models", "View a score across all available algorithms.")
+        heading("Compare the Models", "View a score across all available algorithms.")
     with right:
         metric = menu_select(
             "Score to compare", ["Recall", "F1", "Precision", "Accuracy"],
@@ -178,7 +178,7 @@ def render_overview(frames: dict[int, pd.DataFrame], *, real_mode: bool) -> None
         )
     html(score_chart_html(table, metric))
 
-    heading("Complete results", "Exact model scores and classification errors.")
+    heading("Complete Results", "Exact model scores and classification errors.")
     html(comparison_table_html(table))
     st.download_button(
         "Download comparison CSV",
@@ -189,7 +189,7 @@ def render_overview(frames: dict[int, pd.DataFrame], *, real_mode: bool) -> None
         type="primary",
     )
 
-    heading("What the data tells us", "Analysis based on the available test results, not assumed outcomes.")
+    heading("What the Data Tells Us", "Analysis based on the available test results, not assumed outcomes.")
     html(insights_html(table, demo=not real_mode))
 
 
@@ -207,7 +207,7 @@ def render_model_details(frames: dict[int, pd.DataFrame]) -> None:
     selected = frames[chosen]
     stats = model_statistics(selected)
 
-    heading("Performance snapshot", "Scores for the selected model, calculated from its predictions.")
+    heading("Performance Snapshot", "Scores for the selected model, calculated from its predictions.")
     html(kpi_grid_html([
         ("Accuracy", f"{stats['Accuracy']:.1%}", "All predictions"),
         ("Precision", f"{stats['Precision']:.1%}", "Reliability of attack alerts"),
@@ -215,14 +215,14 @@ def render_model_details(frames: dict[int, pd.DataFrame]) -> None:
         ("F1-score", f"{stats['F1']:.1%}", "Precision / recall balance"),
     ]))
 
-    heading("Understanding mistakes", "The counts reveal which mistakes are hidden behind the score.")
+    heading("Understanding Mistakes", "The counts reveal which mistakes are hidden behind the score.")
     left, right = st.columns([1.35, 1], gap="medium")
     with left:
         html(matrix_chart_html(stats))
     with right:
         html(
             '<div class="ui-panel"><div class="ui-panel-heading"><div>'
-            '<h3>Error breakdown</h3><p>How many records were classified correctly or incorrectly.</p>'
+            '<h3>Error Breakdown</h3><p>How many records were classified correctly or incorrectly.</p>'
             '</div></div><div class="ui-detail-stats">'
             + "".join(
                 f'<div class="ui-detail-item"><strong>{int(stats[key]):,}</strong><span>{escape(label)}</span></div>'
@@ -235,7 +235,7 @@ def render_model_details(frames: dict[int, pd.DataFrame]) -> None:
             f'{stats["False alarm rate"]:.1%} of actual normal records.</p></div>'
         )
 
-    heading("Inspect predictions", "Filter individual records without changing the stored model output.")
+    heading("Inspect Predictions", "Filter individual records without changing the stored model output.")
     condition = menu_select(
         "Filter records",
         ["All records", "Missed attacks", "False alarms", "Correct predictions"],
@@ -261,8 +261,11 @@ def render_model_details(frames: dict[int, pd.DataFrame]) -> None:
     html(prediction_table_html(rows[display_columns].head(20)))
     st.download_button(
         "Export filtered records",
-        rows[display_columns].to_csv(index=False).encode("utf-8"),
-        file_name=f"p{chosen}_filtered_predictions.csv", mime="text/csv",
+        data=rows[display_columns].to_csv(index=False).encode("utf-8"),
+        file_name=f"p{chosen}_filtered_predictions.csv",
+        mime="text/csv",
+        key="filtered_predictions_export",
+        type="primary",
     )
     st.caption("An attack prediction is a classification label, not proof of a current real-world incident.")
 
@@ -272,7 +275,7 @@ def render_guide() -> None:
     steps = [
         ("Choose your data", "Guided demo uses small practice examples. Team results uses real exported predictions from your classmates."),
         ("Compare model scores", "Open Overview to compare recall, F1, precision, and accuracy. Every score comes from prediction CSVs."),
-        ("Investigate mistakes", "Open Model details to see the confusion matrix and review false alarms or missed attacks."),
+        ("Investigate mistakes", "Open Model Details to see the confusion matrix and review false alarms or missed attacks."),
     ]
     html(
         '<div class="ui-panel ui-guide-list">'
@@ -337,7 +340,7 @@ def main() -> None:
 
     titles = {
         "Overview": ("AI Network Intrusion Detection Dashboard", "Understand and compare how four AI models identify suspicious network traffic."),
-        "Model details": ("Model details", "Explore prediction errors, attack detection, and individual records."),
+        "Model Details": ("Model Details", "Explore prediction errors, attack detection, and individual records."),
         "How it works": ("How it works", "A short guide to the project, its models, and the metrics you will see."),
     }
     render_page_header(*titles[page], real_mode)
@@ -345,7 +348,7 @@ def main() -> None:
 
     if page == "Overview":
         render_overview(report.frames, real_mode=real_mode)
-    elif page == "Model details":
+    elif page == "Model Details":
         render_model_details(report.frames)
     else:
         render_guide()

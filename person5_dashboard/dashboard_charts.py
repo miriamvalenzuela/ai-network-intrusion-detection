@@ -135,7 +135,7 @@ def matrix_chart_html(stats: Mapping) -> str:
 
     return (
         '<div class="ui-panel ui-matrix-panel">'
-        '<div class="ui-panel-heading"><div><h3>Confusion matrix</h3>'
+        '<div class="ui-panel-heading"><div><h3>Confusion Matrix</h3>'
         '<p>Actual classification versus the model prediction.</p></div></div>'
         '<div class="ui-table-overflow">'
         '<table class="ui-matrix" aria-label="Confusion matrix comparing actual and predicted network labels">'
