@@ -21,7 +21,7 @@ def main():
     model = Pipeline([
         ("prepare", preprocess_for(X_train)),
         ("classifier", RandomForestClassifier(
-            n_estimators=100, max_depth=18, min_samples_leaf=2,
+            n_estimators=124, max_depth=13, min_samples_leaf=2,
             class_weight="balanced_subsample", random_state=42, n_jobs=-1
         )),
     ])
@@ -29,7 +29,6 @@ def main():
     model.fit(X_train, y_train)
     predictions = model.predict(X_test)
     save_results(y_test, predictions, args.data_dir, 2, "person2_random_forest")
-    # TODO: Experiment with n_estimators or max_depth and explain the result.
 
 
 if __name__ == "__main__":
